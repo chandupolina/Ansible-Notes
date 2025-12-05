@@ -1,0 +1,12 @@
+# to install apache2
+---
+- name: to install Apache2
+  hosts: all
+  become: true
+  tasks:
+  - name: to install apache2 
+    apt:
+      name: apache2 
+      state: present
+
+

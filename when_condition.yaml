@@ -1,0 +1,21 @@
+# this playbook  explains using of when conditions
+
+---
+- name: this playbook tells about conditions 
+  hosts: all
+  become: true
+  tasks: 
+  - name: install apache2 on ubuntu
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+    when: ansible_os_family == "Debian"
+  - name: install  httpd on centOS
+    yum:
+      name: httpd
+      state: present
+      update_cache: yes
+    when: ansible_os_family == "RedHat"
+
+

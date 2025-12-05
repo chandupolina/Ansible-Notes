@@ -1,0 +1,42 @@
+
+# Playbook with 3 main tasks uses three different modules 
+
+---
+- name : Install start and have custom webpage 
+  hosts: all
+  become: true 
+  tasks:
+  - name: Install apache webserver
+    apt:
+      name: apache2
+      state: present
+  - name: start the service
+    service: 
+      name: apache2
+      state: started
+      enabled: true
+  - name: copy the file
+    ansible.builtin.copy:
+      src: index.html
+      dest: /var/www/html/index.html
+
+
+# Explain about these play book
+# This Ansible playbook is designed to install and configure the Apache web server on all targeted hosts. 
+# Here's a breakdown of what each section does:
+# 1. Hosts and Privileges:
+#    - The playbook is set to run on all hosts defined in the inventory file.
+#    - It uses 'become: true' to execute tasks with elevated privileges (typically as the root user).
+# 2. Tasks:
+#    - The playbook contains three main tasks:
+#      a. Install Apache Web Server:
+#         - It uses the 'apt' module to ensure that the Apache2 package is installed on the system.
+#         - The 'state: present' parameter ensures that the package is installed if it is not already present.
+#      b. Start and Enable Apache Service:
+#         - It uses the 'service' module to start the Apache2 service.
+#         - The 'state: started' parameter ensures that the service is running.
+#         - The 'enabled: true' parameter ensures that the service is enabled to start on boot.
+#      c. Copy Custom Webpage:
+#         - It uses the 'ansible.builtin.copy' module to copy a custom HTML file (index.html) from the local machine to the web server's document root directory (/var/www/html/).
+#         - This allows you to customize the default webpage served by Apache.  
+# Overall, this playbook automates the process of setting up a basic web server with a custom homepage, making it easy to deploy and manage web services across multiple servers.

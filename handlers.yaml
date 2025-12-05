@@ -1,0 +1,43 @@
+# install httpd with handlers
+---
+- name: To install httpd on centos host
+  hosts: all
+  become: true
+  vars:
+    role: Devops-engineer
+    Company: Softility-tech
+  tasks:
+  - name: install httpd on centos host  
+    yum:
+      name: httpd
+      state: present
+      update_cache: yes
+    ignore_errors: yes
+  - name: start the service
+    service:
+      name: httpd
+      state: started
+      enabled: true
+  - name: copy the index.html file
+    template:
+      src: index.html
+      destination: /var/www/html/index.html
+    notify:   # here notify is an action used to trigger a handler when a task changes the state of the system
+      - Restart the services
+  handlers:
+  - name: Restart the service 
+    service:
+      name: httpd
+      state: restarted 
+      enabled: true
+
+
+
+# Handlers
+#   Handlers are special tasks that run at the end of the playbook when notified by another task. 
+    # They are useful for optimizing performance by only executing when necessary.
+    # Restart the service:
+    # service: This module manages services on the remote hosts.
+    # name: httpd: Specifies the HTTP server service to manage.
+    # enabled: true: Ensures that the httpd service is enabled to start on boot.
+    # state: restarted: Restarts the httpd service whenever it is notified.

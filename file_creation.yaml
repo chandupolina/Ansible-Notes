@@ -1,0 +1,12 @@
+# create a file using file module
+---
+  - name: Creates a file using file module
+    become: true
+    hosts: all
+    tasks:
+    - name: Creating a file 
+      file:
+        path: /tmp/file.txt
+        owner: root
+        state: touch
+        mode: 0777

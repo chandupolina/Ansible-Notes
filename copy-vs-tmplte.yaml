@@ -1,0 +1,64 @@
+# install apache2 on host
+
+---    
+- name: installing apache2 on ubuntu
+  become: true
+  hosts: all
+  vars:
+    courseName: kuberenetes
+    batchNumber: 11th-batch
+  tasks:
+  - name: Installing apache2 on ubuntu
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+  - name: Starting the service apache
+    service:
+      name: apache2
+      state: started
+      enabled: true
+  - name: Copying the index.html file
+    copy:
+      src: index.html
+      destination: /var/www/hrml/index.html
+
+# vi index.html
+<h1> Welcome to {{courseName}}  {{batchNumber}} </h1>
+output page:
+Welcome to {{courseName}}  {{batchNumber}}
+
+
+# when we run the above playbook the variable will be displayed as output, 
+# this is beacause copy module will not update the variables
+# instead of copy module , we can use template module , if we want to have dynamic values
+
+
+--- 
+- name: Installing apache2 on host
+  become : true
+  hosts: all
+  vars:
+    courseName:  kuberenetes
+    batchNumber: 11th-batch
+  tasks:
+  - name: Install apache2
+    apt:
+      name: apache2
+      state: present
+      update_cache: yes
+  - name: Start the service
+    service: 
+      name: apache2
+      state: started
+      enabled: true
+  - name: copy the file
+    template:  # previously we used copy module 
+      src: index.html
+      destination: /var/www/html/index.html
+
+# vi index.html
+<h1> Welcome to {{courseName}}  {{batchNumber}} </h1>
+output page:
+Welcome to kuberenetes 11th-batch
+---

@@ -1,0 +1,74 @@
+Here i am discussing about roles concept in ansible
+---
+- name: Roles Concept
+  hosts: all
+  become: true
+  roles:
+    - webserver
+    - database  
+# roles:
+# Roles are a way to organize Ansible playbooks into reusable components.
+# They allow you to group related tasks, varibles , files , templates and handlers together.
+# This makes it easier to manage and share code across multiple playbooks.
+# In this example , we are using two roles : webserver and database
+# webserver role will contain tasks related to setting up a webserver (like installing httpd, configuring it etc)
+# database role will contain tasks related to setting up a database server (like installing mysql, configuring it etc)
+# To create a role we can use the command  
+ansible-galaxy init role_name
+# This will create a directory structure for the role with subdirectories as tasks , handlers , files , templates , vars , defaults , meta
+# we can then add our task to  the tasks/main.yaml and handlers to handlers/main.yaml and files to files/ and vars to vars/main.yaml and templates to templates/
+# Finally we can include the role in our playbook using the roles keyword as shown in the example above
+# To run the playbook with roles we can use the command
+ansible-playbook  -i inv_file playbook.yaml
+# where inv_file is the inventory file and playbook.yaml is the playbook containing the roles.
+#  This will execute all the task defined in the roles for the specified hosts
+
+# please start the step by step creation of roles and its components
+
+--------------------------------------------------------------------------------------
+# Step 1: Create the role directory structure
+ansible-galaxy init webserver
+ansible-galaxy init database
+# step 2: Add tasks to the webserver role
+# In webserver/task/main.yaml
+---
+- name: Install httpd
+  yum:
+    name: httpd
+    state: present
+    update_cache: yes
+- name: start httpd service
+  service:
+    name: httpd
+    state: started
+    enabled: true
+# step 3: Add tasks to the database role
+# In database/task/main.yaml
+---
+- name: Install mysql
+  yum:
+    name: mysql-server
+    state: present
+    update_cache: yes
+- name: start mysql service
+  service: 
+    name: mysqld
+    state: started
+    enabled: true
+# Step 4: Create the playbook to use the roles
+# In playbook.yaml
+---
+- name: setup web and database servers
+  hosts: all
+  become: true
+  roles: 
+    - webserver
+    - database
+# step 5: Run the playbook
+ansible-playbook -i inv_file playbook.yaml
+# where inv_file is the inventory file containing the list of hosts
+# this will execute the tasks defined in the webserver and database roles on all the specified hosts
+
+
+
+

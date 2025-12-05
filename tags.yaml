@@ -1,0 +1,32 @@
+---
+- name: Tags Concept
+  hosts: all
+  become: true
+  tasks:
+  - name: install apache2
+    tags:
+    - install
+    yum:
+      name: httpd     
+      state: present
+      update_cache: yes
+  - name: start the service
+    tags:
+    - start
+    service:
+      name: httpd
+      state: started
+      enabled: true
+  - name: tree install
+    yum:
+      name: tree
+      state: present
+
+  
+  # tags:
+  tags concept is very useful when we want to run a specific task  from all the tasks
+  # if i want to run a specific task in a playbook , we can use  tags
+
+  # ansible-playbook -i inv_file playbook.yaml --list-tags
+  # ansible-playbook -i inv_file playbook.yaml --tags 'install'
+  # ansible-playbook -i inv_file playbook.yaml --tags "install,start"

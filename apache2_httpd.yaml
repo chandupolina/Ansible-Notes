@@ -1,0 +1,45 @@
+# to install apache2 on ubuntu and httpd on centos and copy the index.html 
+---
+- name: To install apache2 on ubuntu and centOS
+  become: true
+  hosts: web
+  tasks: 
+  
+  - name: Install apache2 on ubuntu
+    apt:
+      name: apache2
+      state: present
+    when:  ansible_os_family == "Debian"
+
+  - name: Start the Apache service on Ubuntu
+    service:
+        name: apache2
+        state: started
+        enabled: true
+    when: ansible_os_family == "Debian"
+
+  - name: Install httpd on centOS 
+    yum:
+      name: httpd
+      state: present
+    when: ansible_os_family == "RedHat"
+    
+  - name: Start the Apache service on CentOS
+    service:
+      name: httpd
+      state: started
+      enabled: true
+    when: ansible_os_family == "RedHat"
+
+  - name: Copy the file on Ubuntu
+    ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/index.html
+    when: ansible_os_family  in ["Debian", "RedHat"]
+
+      
+
+
+
+
+
